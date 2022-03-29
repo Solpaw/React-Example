@@ -1,17 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { BrowserRouter } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+import PageWrapper from './shared/page-wrapper/page-wrapper';
+import { Outlet } from 'react-router-dom';
+import Dashboard from './feature/dashboard/dashboard';
+import './shared/scss/base.scss';
+
+class App extends React.Component {
+    render() {
+        return (
+          <Outlet />
+        );
+    }
+}
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<App />}>
+        <Route path="/" element={<PageWrapper />}>
+          <Route index path='dashboard' element={<Dashboard />}/>
+        </Route>
+      </Route>
+    </Routes>
+  </BrowserRouter>,
+  document.getElementById('root'));
