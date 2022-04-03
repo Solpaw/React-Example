@@ -1,0 +1,28 @@
+.box {
+    background-color: #282c34;
+
+    img {
+        height: 150px;
+        width: auto;
+        object-fit: contain;
+    }
+
+    li {
+        padding: 10px;
+
+        a {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+
+            &:hover, &.active {
+                background-color: rgba(173, 216, 230, 0.5);
+            }
+        }
+    }
+}
