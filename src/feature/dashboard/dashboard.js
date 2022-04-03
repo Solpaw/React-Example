@@ -6,6 +6,9 @@ import GenerateDialog from "./generateDialog/generateDialog";
 import EditDialog from "./editDialog/editDialog";
 import RemoveDialog from "./removeDialog/removeDialog";
 import TestService from "../../shared/services/test.service";
+import { connect } from 'react-redux';
+import { selectList } from '../../store/actions';
+import { editItems, generateTestList, removeFromList } from "./dashboard.service";
 
 const style = {
   position: 'absolute',
@@ -48,6 +51,9 @@ class Dashboard extends React.Component {
                     <button className="btn btn-primary" onClick={this.edit}>Edit</button>
                     <button className="btn btn-primary" onClick={this.remove}>Delete</button>
                 </header>
+
+                
+
                 <Modal
                     open={this.state.isOpen}
                     onClose={this.handleClose}
@@ -83,17 +89,26 @@ class Dashboard extends React.Component {
     }
 
     handleGenerate = (data) => {
+        this.props.selectList([...generateTestList(data.amount, data.withImage)]);
         this.handleClose();
     }
 
     handleEdit = (data) => {
+        this.props.selectList([...editItems(this.props.list, data.amount, data.isRandom)]);
         this.handleClose();
     }
 
 
     handleRemove = (data) => {
+        this.props.selectList([...removeFromList(this.props.list, data.amount, data.isRandom)]);
         this.handleClose();
     }
 }
 
-export default Dashboard;
+const mapStateToProps = (state) => {
+    return { list: state.list };
+}
+
+export default connect(mapStateToProps, {
+    selectList
+})(Dashboard);
