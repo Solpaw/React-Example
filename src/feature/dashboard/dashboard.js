@@ -9,6 +9,7 @@ import TestService from "../../shared/services/test.service";
 import { connect } from 'react-redux';
 import { selectList } from '../../store/actions';
 import { editItems, generateTestList, removeFromList } from "./dashboard.service";
+import TestTile from "./testTile/testTile";
 
 const style = {
   position: 'absolute',
@@ -44,6 +45,10 @@ class Dashboard extends React.Component {
     render() {
         let { openDialog } = this.state;
 
+        const tiles = this.props.list.map(ele => {
+            return <TestTile key={ele.index} url={ele.url} index={ele.index} title={ele.title} content={ele.content}/>;
+        })
+
         return (
             <main className="col-md col-12">
                 <header className="d-flex gap-2">
@@ -52,7 +57,9 @@ class Dashboard extends React.Component {
                     <button className="btn btn-primary" onClick={this.remove}>Delete</button>
                 </header>
 
-                
+                <div className="">
+                    {tiles}
+                </div>
 
                 <Modal
                     open={this.state.isOpen}
