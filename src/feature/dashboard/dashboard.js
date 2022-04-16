@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { selectList, startTimer, setOperationLimit } from '../../store/actions';
 import TestTile from "./testTile/testTile";
 import Header from './header/header';
+import { operationComplete } from "./dashboard.service";
 
 class Dashboard extends React.Component {
     operationCounter = 0;
@@ -13,29 +14,30 @@ class Dashboard extends React.Component {
     removeCounter = 0;
 
     generateComplete() {
-        this.generateCounter++;
-        if(this.generateCounter === this.props.operationLimit) {
+        this.operationCounter++;
+        if(this.operationCounter === this.props.operationLimit) {
             const time = performance.now() - this.props.startTime;
-            this.generateCounter = 0;
+            this.operationCounter = 0;
             console.log('generate complete', time);
+            operationComplete.next(time)
         }
     }
 
     updateComplete() {
-        this.updateCounter++;
-        if(this.updateCounter === this.props.operationLimit) {
+        this.operationCounter++;
+        if(this.operationCounter === this.props.operationLimit) {
             const time = performance.now() - this.props.startTime;
             console.log('update complete', time);
-            this.updateCounter = 0;
+            this.operationCounter = 0;
         }
     }
 
     removeComplete() {
-        this.removeCounter++;
-        if(this.removeCounter === this.props.operationLimit) {
+        this.operationCounter++;
+        if(this.operationCounter === this.props.operationLimit) {
             const time = performance.now() - this.props.startTime;
             console.log('remove complete', time);
-            this.removeCounter = 0;
+            this.operationCounter = 0;
         }
     }
 

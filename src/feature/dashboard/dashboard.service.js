@@ -1,8 +1,14 @@
 import { LoremIpsum } from "lorem-ipsum";
-import { Subject, firstValueFrom } from "rxjs"
+import { BehaviorSubject, firstValueFrom, take } from "rxjs"
+import { Workbook } from 'exceljs';
+import * as fs from 'file-saver';
 
-const operationComplete = new Subject();
+export const operationComplete = new BehaviorSubject();
 const opComplete = operationComplete.asObservable();
+
+// opComplete.subscribe(res => {
+//   console.log(res)
+// })
 
 const lorem = new LoremIpsum({
   sentencesPerParagraph: {
@@ -56,17 +62,14 @@ export const runGenerationTest = async (maxAmount, repeats, initial, step, start
       amountOfComponents.push(i);
       for(let j = 0; j < repeats; j++) {
         selectList([...generateTestList(i, true, startTime, setOperationLimit, setResults, addResult)]);
-        let val = await firstValueFrom(opComplete)
-        unitResults.push(val);
-        console.log(i, val)
+        await firstValueFrom(opComplete)
+        unitResults.push(operationComplete.getValue());
         selectList([])
-        val = await firstValueFrom(opComplete)
-        console.log(val)
+        await firstValueFrom(opComplete)
       }
       results.push(unitResults);
     }
-    // this.writeFile('Generete', amountOfComponents, 'image');
-    console.log(results)
+    writeFile(results, 'Generete', amountOfComponents, 'image');
 }
 
 export const runEditTest = () => {
@@ -84,4 +87,24 @@ const generateNewTestItem = (index, hasImage) => {
       content: lorem.generateSentences(5),
       index: index,
     }
+}
+
+const writeFile = (results, title, numberOfComponents, additionalInfo) => {
+  let workbook = new Workbook();
+  let worksheet = workbook.addWorksheet('Report');
+  const repeatsRowData = [""]
+  for(let i = 0; i < results[0]?.length; i++) {
+    repeatsRowData.push(i + 1)
+  }
+
+  let titleRow = worksheet.addRow([title]);
+  worksheet.addRow(repeatsRowData);
+  results.forEach((ele, index) => {
+    worksheet.addRow([numberOfComponents[index]].concat(ele))
+  })
+
+  workbook.xlsx.writeBuffer().then((data) => {
+    let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    fs.saveAs(blob, `${title}-${additionalInfo}-React.xlsx`);
+  });
 }
