@@ -4,9 +4,9 @@ import GenerateDialog from "../generateDialog/generateDialog";
 import EditDialog from "../editDialog/editDialog";
 import RemoveDialog from "../removeDialog/removeDialog";
 import React from 'react';
-import { editItems, generateTestList, removeFromList } from "../dashboard.service";
+import { editItems, generateTestList, removeFromList, runEditTest, runGenerationTest, runRemoveTest } from "../dashboard.service";
 import { connect } from 'react-redux';
-import { selectList } from '../../../store/actions';
+import { selectList, startTimer, setOperationLimit, setResults, addResult } from '../../../store/actions';
 
 const style = {
     position: 'absolute',
@@ -42,6 +42,7 @@ class Header extends React.Component {
                 <button className="btn btn-primary" onClick={this.generate}>Generate</button>
                 <button className="btn btn-primary" onClick={this.edit}>Edit</button>
                 <button className="btn btn-primary" onClick={this.remove}>Delete</button>
+                <button className="btn btn-primary" onClick={this.runTests}>Run tests</button>
 
                 <Modal
                     open={this.state.isOpen}
@@ -77,19 +78,39 @@ class Header extends React.Component {
         this.setState({isOpen: true, openDialog: 'remove'})
     }
 
+    runTests = () => {
+        this.startGenerationTest();
+    }
+
+    startGenerationTest = () => {
+        runGenerationTest(100, 5, 10, 10,
+            this.props.startTimer, this.props.setOperationLimit, this.props.setResults, this.props.addResult, this.props.selectList);
+    }
+
+    startEditTest = () => {
+        runEditTest();
+    }
+
+    startRemoveTest = () => {
+        runRemoveTest();
+    }
+
     handleGenerate = (data) => {
-        this.props.selectList([...generateTestList(data.amount, data.withImage)]);
+        this.props.selectList([...generateTestList(data.amount, data.withImage,
+            this.props.startTimer, this.props.setOperationLimit, this.props.setResults, this.props.addResult)]);
         this.handleClose();
     }
 
     handleEdit = (data) => {
-        this.props.selectList([...editItems(this.props.list, data.amount, data.isRandom)]);
+        this.props.selectList([...editItems(this.props.list, data.amount, data.isRandom,
+            this.props.startTimer, this.props.setOperationLimit, this.props.setResults, this.props.addResult)]);
         this.handleClose();
     }
 
 
     handleRemove = (data) => {
-        this.props.selectList([...removeFromList(this.props.list, data.amount, data.isRandom)]);
+        this.props.selectList([...removeFromList(this.props.list, data.amount, data.isRandom, 
+            this.props.startTimer, this.props.setOperationLimit, this.props.setResults, this.props.addResult)]);
         this.handleClose();
     }
 }
@@ -99,5 +120,9 @@ const mapStateToProps = (state) => {
 }
 
 export default connect(mapStateToProps, {
-    selectList
+    selectList,
+    startTimer,
+    setOperationLimit,
+    setResults,
+    addResult,
 })(Header);

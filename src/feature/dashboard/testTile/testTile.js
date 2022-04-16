@@ -4,15 +4,18 @@ import './testTile.scss';
 class TestTile extends React.Component {
 
     componentDidMount() {
-        console.log(this.props.index + 1, 'WillMount')
+        // console.log(this.props.index + 1, 'WillMount')
+        this.props.generateComplete();
     }
 
     componentDidUpdate() {
-        console.log(this.props.index + 1, 'WillUpdate')
+        // console.log(this.props.index + 1, 'WillUpdate')
+        this.props.updateComplete();
     }
 
     componentWillUnmount() {
-        console.log(this.props.index + 1, 'WillUnmount')
+        // console.log(this.props.index + 1, 'WillUnmount')
+        this.props.removeComplete();
     }
 
     render() {
@@ -29,4 +32,5 @@ class TestTile extends React.Component {
     }
 }
 
-export default React.memo(TestTile);
+export default TestTile;
+// export default React.memo(TestTile);
