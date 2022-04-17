@@ -79,7 +79,7 @@ class Header extends React.Component {
     }
 
     runTests = () => {
-        this.startGenerationTest();
+        this.startRemoveTest();
     }
 
     startGenerationTest = () => {
@@ -88,11 +88,13 @@ class Header extends React.Component {
     }
 
     startEditTest = () => {
-        runEditTest();
+        runEditTest(500, 5, 5, 5, 
+            this.props.startTimer, this.props.setOperationLimit, this.props.setResults, this.props.addResult, this.props.selectList, this.props.list);
     }
 
     startRemoveTest = () => {
-        runRemoveTest();
+        runRemoveTest(500, 5, 50, 50, 
+            this.props.startTimer, this.props.setOperationLimit, this.props.setResults, this.props.addResult, this.props.selectList);
     }
 
     handleGenerate = (data) => {

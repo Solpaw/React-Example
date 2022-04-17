@@ -9,16 +9,12 @@ import { operationComplete } from "./dashboard.service";
 class Dashboard extends React.Component {
     operationCounter = 0;
 
-    generateCounter = 0;
-    updateCounter = 0;
-    removeCounter = 0;
-
     generateComplete() {
         this.operationCounter++;
         if(this.operationCounter === this.props.operationLimit) {
             const time = performance.now() - this.props.startTime;
             this.operationCounter = 0;
-            console.log('generate complete', time);
+            // console.log('generate complete', time);
             operationComplete.next(time)
         }
     }
@@ -27,8 +23,9 @@ class Dashboard extends React.Component {
         this.operationCounter++;
         if(this.operationCounter === this.props.operationLimit) {
             const time = performance.now() - this.props.startTime;
-            console.log('update complete', time);
             this.operationCounter = 0;
+            // console.log('update complete', time);
+            operationComplete.next(time)
         }
     }
 
@@ -36,8 +33,9 @@ class Dashboard extends React.Component {
         this.operationCounter++;
         if(this.operationCounter === this.props.operationLimit) {
             const time = performance.now() - this.props.startTime;
-            console.log('remove complete', time);
             this.operationCounter = 0;
+            // console.log('remove complete', time);
+            operationComplete.next(time)
         }
     }
 
